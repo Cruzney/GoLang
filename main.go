@@ -5,7 +5,11 @@ import (
 	"net/http"
 	"os"
 	"reflect"
+	"time"
 )
+
+const monitoramentos = 5
+const intervalo = 5
 
 func main() {
 	exibeIntroducao()
@@ -20,6 +24,7 @@ func main() {
 			// iniciarMonitoramento()
 		case 2:
 			fmt.Println("Exibindo Logs...")
+			//treinaFor()
 		case 0:
 			fmt.Println("Saindo do Programa...")
 			os.Exit(0)
@@ -65,20 +70,19 @@ func leComando() int {
 
 func startMonitoring() {
 	fmt.Println("Iniciando Monitoramento...")
+	sites := []string{"https://www.alura.com.br", "https://www.totvs.com.br", "https://www.goTTgle.com"}
+	for i := 0; i < monitoramentos; i++ {
 
-	site := "https://www.totvs.com.br"
-	resp, err := http.Get(site)
-	if err != nil {
-		fmt.Println("Ocorreu um erro:", err)
-		return
+		for i, site := range sites {
+			fmt.Println("Testando site", i, ":", site)
+			TestSites(site)
+		}
+		time.Sleep(time.Second * intervalo)
+		fmt.Println("")
 	}
-	defer resp.Body.Close()
 
-	if resp.StatusCode == 200 {
-		fmt.Println("O site ## ", site, " ## foi carregado com sucesso!")
-	} else {
-		fmt.Println("Ocorreu um erro: Status Code:", resp.StatusCode)
-	}
+	fmt.Println("")
+
 }
 
 // func iniciarMonitoramento() {
@@ -93,3 +97,24 @@ func startMonitoring() {
 // 		fmt.Println("Site:", site, "está com problemas. Status Code:", resp.StatusCode)
 // 	}
 // }
+
+//	func treinaFor() {
+//		pontosPlanningPoker := []int{1, 2, 3, 5, 8, 13, 21, 40}
+//		for i, ponto := range pontosPlanningPoker {
+//			fmt.Println(" o ponto na posição", i, " tem o valor:", ponto)
+//		}
+//	}
+func TestSites(site string) {
+	resp, err := http.Get(site)
+	if err != nil {
+		fmt.Println("Ocorreu um erro:", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == 200 {
+		fmt.Println("O site ## ", site, " ## foi carregado com sucesso!")
+	} else {
+		fmt.Println("Ocorreu um erro: Status Code:", resp.StatusCode)
+	}
+}
